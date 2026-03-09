@@ -209,3 +209,14 @@ export function evaluate(ast, ctx) {
       throw new Error(`未知 AST 节点类型: ${ast.type}`);
   }
 }
+
+const astCache = new Map();
+
+export function evalExpr(source, ctx) {
+  let ast = astCache.get(source);
+  if (!ast) {
+    ast = parse(tokenize(source));
+    astCache.set(source, ast);
+  }
+  return evaluate(ast, ctx);
+}
