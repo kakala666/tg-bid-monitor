@@ -5,7 +5,8 @@
   "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "start": "node src/index.js",
+    "start": "cd src/web/v2 && npm install --silent && npm run build && cd ../.. && node src/index.js",
+    "start:only": "node src/index.js",
     "setup": "npm install && cd src/web/v2 && npm install && npm run build",
     "build:v2": "cd src/web/v2 && npm run build",
     "dev:v2": "cd src/web/v2 && npm run dev",

@@ -26,8 +26,8 @@
 git clone https://github.com/kakala666/tg-bid-monitor.git
 cd tg-bid-monitor
 
-# 一键安装（后端 + 前端构建）
-npm run setup
+# 安装后端依赖
+npm install
 ```
 
 ### 3. 配置
@@ -77,7 +77,7 @@ cp config.example.json config.json
 npm start
 ```
 
-首次启动会提示输入 Telegram 验证码（发送到你的 Telegram），登录成功后 session 会保存到 `session.txt`，之后启动无需再次验证。
+`npm start` 会自动构建 V2 前端再启动后端服务。首次启动会提示输入 Telegram 验证码（发送到你的 Telegram），登录成功后 session 会保存到 `session.txt`，之后启动无需再次验证。
 
 ### 5. 使用
 
