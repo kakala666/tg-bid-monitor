@@ -162,3 +162,50 @@ export function parse(tokens) {
   }
   return ast;
 }
+
+export function evaluate(ast, ctx) {
+  switch (ast.type) {
+    case 'Literal':
+      return ast.value;
+    case 'Identifier':
+      return ctx[ast.name];
+    case 'Member': {
+      const obj = evaluate(ast.object, ctx);
+      if (obj == null) return undefined;
+      return obj[ast.property];
+    }
+    case 'Call': {
+      const fn = evaluate(ast.callee, ctx);
+      if (typeof fn !== 'function') {
+        throw new Error(`'${ast.callee.name || 'expression'}' 不是函数`);
+      }
+      const args = ast.args.map(a => evaluate(a, ctx));
+      return fn(...args);
+    }
+    case 'Unary':
+      if (ast.op === '!') return !evaluate(ast.operand, ctx);
+      throw new Error(`未知一元运算符: ${ast.op}`);
+    case 'Binary': {
+      if (ast.op === '&&') return evaluate(ast.left, ctx) && evaluate(ast.right, ctx);
+      if (ast.op === '||') return evaluate(ast.left, ctx) || evaluate(ast.right, ctx);
+      const left = evaluate(ast.left, ctx);
+      const right = evaluate(ast.right, ctx);
+      switch (ast.op) {
+        case '+': return left + right;
+        case '-': return left - right;
+        case '*': return left * right;
+        case '/': return left / right;
+        case '%': return left % right;
+        case '>': return left > right;
+        case '<': return left < right;
+        case '>=': return left >= right;
+        case '<=': return left <= right;
+        case '==': return left === right;
+        case '!=': return left !== right;
+        default: throw new Error(`未知运算符: ${ast.op}`);
+      }
+    }
+    default:
+      throw new Error(`未知 AST 节点类型: ${ast.type}`);
+  }
+}

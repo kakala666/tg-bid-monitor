@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { tokenize, parse } from '../../src/strategy-v2/expr.js';
+import { tokenize, parse, evaluate } from '../../src/strategy-v2/expr.js';
 
 describe('tokenize', () => {
   it('数字', () => {
@@ -151,5 +151,81 @@ describe('parse', () => {
     expect(ast.type).toBe('Binary');
     expect(ast.op).toBe('*');
     expect(ast.left.op).toBe('+');
+  });
+});
+
+describe('evaluate', () => {
+  const ev = (source, ctx = {}) => evaluate(parse(tokenize(source)), ctx);
+
+  it('数字字面量', () => {
+    expect(ev('42')).toBe(42);
+  });
+
+  it('null', () => {
+    expect(ev('null')).toBe(null);
+  });
+
+  it('标识符查找', () => {
+    expect(ev('rank', { rank: 3 })).toBe(3);
+  });
+
+  it('成员访问', () => {
+    expect(ev('myAd.rank', { myAd: { rank: 5 } })).toBe(5);
+  });
+
+  it('成员访问 null 安全', () => {
+    expect(ev('above.price', { above: null })).toBe(undefined);
+  });
+
+  it('算术运算', () => {
+    expect(ev('a + b * c', { a: 1, b: 2, c: 3 })).toBe(7);
+    expect(ev('10 - 3', {})).toBe(7);
+    expect(ev('10 / 2', {})).toBe(5);
+    expect(ev('10 % 3', {})).toBe(1);
+  });
+
+  it('比较运算', () => {
+    expect(ev('a > 3', { a: 5 })).toBe(true);
+    expect(ev('a <= 3', { a: 3 })).toBe(true);
+    expect(ev('a == 3', { a: 3 })).toBe(true);
+    expect(ev('a != 3', { a: 5 })).toBe(true);
+  });
+
+  it('逻辑运算', () => {
+    expect(ev('a > 1 && b > 1', { a: 2, b: 2 })).toBe(true);
+    expect(ev('a > 1 && b > 1', { a: 2, b: 0 })).toBe(false);
+    expect(ev('a > 1 || b > 1', { a: 0, b: 2 })).toBe(true);
+  });
+
+  it('取反', () => {
+    expect(ev('!a', { a: false })).toBe(true);
+    expect(ev('!a', { a: true })).toBe(false);
+  });
+
+  it('null 比较', () => {
+    expect(ev('above != null', { above: { price: 100 } })).toBe(true);
+    expect(ev('above != null', { above: null })).toBe(false);
+    expect(ev('above == null', { above: null })).toBe(true);
+  });
+
+  it('函数调用 ad()', () => {
+    const ctx = {
+      ad: (id) => ({ rank: 2, price: 100 }),
+    };
+    expect(ev('ad("AD2480").price', ctx)).toBe(100);
+  });
+
+  it('复杂业务表达式', () => {
+    const ctx = {
+      myAd: { rank: 3, price: 200 },
+      above: { rank: 2, price: 180 },
+      gapThreshold: 5,
+    };
+    expect(ev('above.price - myAd.price > gapThreshold', ctx)).toBe(false);
+    expect(ev('myAd.price - above.price > gapThreshold', ctx)).toBe(true);
+  });
+
+  it('未定义变量返回 undefined', () => {
+    expect(ev('notExist', {})).toBe(undefined);
   });
 });
