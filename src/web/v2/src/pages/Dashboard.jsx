@@ -1,6 +1,7 @@
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import ControlPanel from '../components/ControlPanel';
+import RankingTable from '../components/RankingTable';
 
 export default function Dashboard() {
   return (
@@ -12,9 +13,7 @@ export default function Dashboard() {
 
       {/* 中栏: 排名表 */}
       <Box sx={{ flex: 1, minWidth: 0 }}>
-        <Typography variant="subtitle2" color="text.secondary" sx={{ p: 2 }}>
-          排名表 (待实现)
-        </Typography>
+        <RankingTable />
       </Box>
 
       {/* 右栏: 建议 + 日志 */}
