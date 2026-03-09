@@ -9,6 +9,7 @@ import useWebSocket from './hooks/useWebSocket';
 import useStore from './stores/useStore';
 import Dashboard from './pages/Dashboard';
 import Analytics from './pages/Analytics';
+import Settings from './pages/Settings';
 import Debug from './pages/Debug';
 
 function Placeholder({ title }) {
@@ -30,7 +31,7 @@ export default function App() {
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/analytics" element={<Analytics />} />
-              <Route path="/settings" element={<Placeholder title="配置管理" />} />
+              <Route path="/settings" element={<Settings />} />
               <Route path="/debug" element={<Debug />} />
             </Routes>
           </Box>
