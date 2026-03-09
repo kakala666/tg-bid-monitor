@@ -9,6 +9,7 @@ import useWebSocket from './hooks/useWebSocket';
 import useStore from './stores/useStore';
 import Dashboard from './pages/Dashboard';
 import Analytics from './pages/Analytics';
+import Debug from './pages/Debug';
 
 function Placeholder({ title }) {
   return <Typography variant="h5" sx={{ p: 3 }}>{title}</Typography>;
@@ -30,7 +31,7 @@ export default function App() {
               <Route path="/" element={<Dashboard />} />
               <Route path="/analytics" element={<Analytics />} />
               <Route path="/settings" element={<Placeholder title="配置管理" />} />
-              <Route path="/debug" element={<Placeholder title="调试工具" />} />
+              <Route path="/debug" element={<Debug />} />
             </Routes>
           </Box>
         </Box>
