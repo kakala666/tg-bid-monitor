@@ -10,6 +10,9 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import AddIcon from '@mui/icons-material/Add';
 import useStore from '../stores/useStore';
+import FlowCanvas from '../components/strategy/FlowCanvas';
+import { engineToFlow } from '../components/strategy/flowUtils';
+import { generateDefaultStrategy } from '../utils/defaultStrategy';
 
 const LEFT_WIDTH = 200;
 const RIGHT_WIDTH = 280;
@@ -18,6 +21,8 @@ export default function Strategy() {
   const config = useStore((s) => s.config);
   const [tabIndex, setTabIndex] = useState(0); // 0=广告策略, 1=策略模板
   const [selectedId, setSelectedId] = useState(null);
+  const [flowData, setFlowData] = useState({ nodes: [], edges: [] });
+  const [selectedNode, setSelectedNode] = useState(null);
 
   // 从 config 提取列表
   const adStrategies = config.adStrategies || {};
@@ -36,6 +41,22 @@ export default function Strategy() {
       setSelectedId(currentList[0]);
     }
   }, [tabIndex, currentList.length]);
+
+  // 加载策略数据
+  useEffect(() => {
+    if (!selectedId) return;
+    let engineGraph;
+    if (tabIndex === 0) {
+      engineGraph = adStrategies[selectedId] || null;
+      if (!engineGraph) {
+        setFlowData(engineToFlow(generateDefaultStrategy()));
+        return;
+      }
+    } else {
+      engineGraph = templates[selectedId] || null;
+    }
+    setFlowData(engineToFlow(engineGraph));
+  }, [selectedId, tabIndex]);
 
   const handleAddTemplate = () => {
     const name = prompt('输入模板名称（英文，如 aggressive）：');
@@ -95,12 +116,19 @@ export default function Strategy() {
           )}
         </Box>
 
-        {/* 中栏：画布占位 */}
-        <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: 'background.paper' }}>
-          <Typography color="text.secondary">
-            {selectedId ? `编辑: ${selectedId}` : '请选择一个策略'}
-          </Typography>
-        </Box>
+        {/* 中栏：画布 */}
+        {selectedId ? (
+          <FlowCanvas
+            key={`${tabIndex}-${selectedId}`}
+            nodes={flowData.nodes}
+            edges={flowData.edges}
+            onNodeSelect={setSelectedNode}
+          />
+        ) : (
+          <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Typography color="text.secondary">请选择一个策略</Typography>
+          </Box>
+        )}
 
         {/* 右栏：属性面板占位 */}
         <Box sx={{
