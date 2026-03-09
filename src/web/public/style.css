@@ -1,0 +1,62 @@
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: 'Segoe UI',sans-serif; background:#1a1a2e; color:#e0e0e0; }
+.container { max-width:1400px; margin:0 auto; padding:12px; }
+header { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #333; margin-bottom:12px; }
+header h1 { font-size:1.3rem; }
+.status-bar { font-size:0.85rem; display:flex; align-items:center; gap:8px; }
+.dot { width:10px; height:10px; border-radius:50%; display:inline-block; }
+.dot.red { background:#e74c3c; }
+.dot.green { background:#2ecc71; }
+.sep { color:#555; }
+.panels { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.card { background:#16213e; border-radius:8px; padding:14px; margin-bottom:12px; }
+.card h2 { font-size:1rem; margin-bottom:10px; color:#a0c4ff; }
+.card h3 { font-size:0.85rem; margin:8px 0 6px; color:#888; }
+.btn-group { display:flex; gap:8px; flex-wrap:wrap; }
+button { padding:6px 14px; border:none; border-radius:4px; cursor:pointer;
+  background:#0f3460; color:#e0e0e0; font-size:0.85rem; transition:background 0.2s; }
+button:hover { background:#1a5276; }
+button.small { padding:2px 8px; font-size:0.75rem; }
+.debug-row { display:flex; gap:6px; align-items:center; }
+.debug-row input { flex:1; padding:5px 8px; background:#0d1b3e; border:1px solid #333;
+  border-radius:4px; color:#e0e0e0; font-size:0.85rem; }
+.raw-text { background:#0d1b3e; padding:10px; border-radius:4px; font-size:0.8rem;
+  white-space:pre-wrap; max-height:200px; overflow-y:auto; margin-bottom:10px; color:#aaa; }
+table { width:100%; border-collapse:collapse; font-size:0.85rem; }
+th,td { padding:6px 10px; text-align:left; border-bottom:1px solid #222; }
+th { color:#a0c4ff; }
+tr:hover { background:#1a2744; }
+.price { color:#f39c12; font-weight:bold; }
+.ad-card { background:#0d1b3e; border-radius:6px; padding:10px; margin-bottom:8px; border-left:3px solid #2ecc71; }
+.ad-header { display:flex; gap:12px; align-items:center; margin-bottom:8px; font-size:0.85rem; }
+.ad-id { color:#a0c4ff; font-weight:bold; }
+.ad-rank { color:#f39c12; }
+.ad-status { color:#2ecc71; }
+.ad-body { display:grid; grid-template-columns:repeat(auto-fill, minmax(140px,1fr)); gap:6px; font-size:0.82rem; }
+.ad-field { display:flex; justify-content:space-between; background:#162447; padding:4px 8px; border-radius:3px; }
+.ad-field span { color:#888; }
+.ad-preview { margin-top:6px; font-size:0.78rem; color:#999; padding:4px 8px; background:#111; border-radius:3px; }
+.sug-info { font-size:0.85rem; margin-bottom:8px; color:#aaa; }
+.sug-card { background:#0d1b3e; border-radius:6px; padding:10px; margin-bottom:8px; border-left:3px solid #888; }
+.sug-header { display:flex; gap:12px; align-items:center; font-size:0.85rem; margin-bottom:6px; }
+.sug-prices { display:flex; gap:10px; align-items:center; font-size:0.9rem; margin-bottom:4px; }
+.sug-diff { color:#f39c12; font-size:0.82rem; }
+.sug-reason { font-size:0.78rem; color:#888; margin-top:4px; }
+#logContainer { max-height:400px; overflow-y:auto; font-size:0.78rem; font-family:monospace; }
+.log-entry { padding:3px 0; border-bottom:1px solid #111; }
+.log-entry .time { color:#666; }
+.log-entry.INFO .level { color:#3498db; }
+.log-entry.WARN .level { color:#f39c12; }
+.log-entry.ERROR .level { color:#e74c3c; }
+.log-entry.ACTION .level { color:#2ecc71; }
+.config-form label { display:flex; justify-content:space-between; align-items:center;
+  padding:5px 0; font-size:0.85rem; }
+.config-form input, .config-form select { background:#0d1b3e; border:1px solid #333;
+  border-radius:4px; padding:4px 8px; color:#e0e0e0; width:120px; font-size:0.85rem; }
+.config-form .slot { background:#0d1b3e; padding:8px; border-radius:4px; margin:4px 0;
+  display:flex; gap:8px; align-items:center; font-size:0.85rem; }
+.config-form .slot input { width:70px; }
+.ad-config-block { background:#0a1630; border:1px solid #1a3a5c; border-radius:6px; padding:10px; margin:8px 0; }
+.ad-config-header { display:flex; gap:8px; align-items:center; font-size:0.85rem; margin-bottom:6px; flex-wrap:wrap; }
+.ad-config-header input { background:#0d1b3e; border:1px solid #333; border-radius:4px; padding:3px 6px; color:#e0e0e0; font-size:0.82rem; }
+@media (max-width:900px) { .panels { grid-template-columns:1fr; } }

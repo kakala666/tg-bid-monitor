@@ -1,0 +1,15 @@
+.back-link { color:#a0c4ff; text-decoration:none; font-size:0.9rem; }
+.back-link:hover { text-decoration:underline; }
+.toolbar { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
+.granularity-btns { display:flex; gap:4px; flex-wrap:wrap; }
+.granularity-btns button.active { background:#1a5276; outline:1px solid #3498db; }
+.filter-row { display:flex; gap:8px; align-items:center; font-size:0.85rem; }
+.filter-row select { background:#0d1b3e; border:1px solid #333; border-radius:4px;
+  padding:5px 8px; color:#e0e0e0; font-size:0.85rem; }
+.chart-section { min-height:280px; }
+.chart-section canvas { max-height:320px; }
+.table-wrap { max-height:500px; overflow-y:auto; }
+.positive { color:#2ecc71; }
+.negative { color:#e74c3c; }
+#dataTable { font-size:0.82rem; }
+#dataTable td, #dataTable th { white-space:nowrap; }

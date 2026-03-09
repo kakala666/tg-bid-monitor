@@ -1,0 +1,17 @@
+{
+  "name": "tg-bid-monitor",
+  "version": "1.0.0",
+  "description": "Telegram广告竞价监控",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "telegram": "^2.26.22",
+    "input": "^1.0.1",
+    "express": "^4.21.0",
+    "ws": "^8.18.0",
+    "dotenv": "^16.4.5"
+  }
+}

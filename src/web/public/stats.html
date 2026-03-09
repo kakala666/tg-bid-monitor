@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TG广告统计</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="stats.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>📈 TG广告统计</h1>
+      <a href="/" class="back-link">← 返回控制台</a>
+    </header>
+
+    <section class="card toolbar">
+      <div class="granularity-btns" id="granBtns"></div>
+      <div class="filter-row">
+        <label>广告筛选:</label>
+        <select id="adFilter"><option value="">全部广告</option></select>
+        <button onclick="refreshStats()">刷新数据</button>
+      </div>
+    </section>
+
+    <section class="card chart-section">
+      <h2>展示新增量</h2>
+      <canvas id="viewsChart"></canvas>
+    </section>
+
+    <section class="card chart-section">
+      <h2>余额变化 (U)</h2>
+      <canvas id="remainingChart"></canvas>
+    </section>
+
+    <section class="card">
+      <h2>详细数据</h2>
+      <div class="table-wrap">
+        <table id="dataTable">
+          <thead><tr>
+            <th>时间</th><th>广告ID</th><th>展示新增</th>
+            <th>余额变化</th><th>当前竞价</th><th>排名</th>
+            <th>累计展示</th><th>剩余余额</th>
+          </tr></thead>
+          <tbody id="dataBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+  <script src="stats.js"></script>
+</body>
+</html>

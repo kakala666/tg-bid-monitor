@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TG竞价监控</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>📊 TG广告竞价监控</h1>
+      <div class="status-bar">
+        <a href="/stats.html" style="color:#a0c4ff;text-decoration:none;font-size:0.85rem">📈 统计页面</a>
+        <span class="sep">|</span>
+        <span id="connStatus" class="dot red"></span>
+        <span id="connText">未连接</span>
+        <span class="sep">|</span>
+        <span id="monitorStatus">监控已停止</span>
+      </div>
+    </header>
+
+    <div class="panels">
+      <!-- 左侧：控制 + 排名 -->
+      <div class="panel-left">
+        <section class="card controls">
+          <h2>控制台</h2>
+          <div class="btn-group">
+            <button id="btnNavigate" onclick="api('/api/navigate','POST')">首次导航</button>
+            <button id="btnRefresh" onclick="api('/api/refresh','POST')">手动刷新</button>
+            <button id="btnMyAds" onclick="fetchMyAds()">获取我的广告详情</button>
+            <button id="btnStartMonitor" onclick="api('/api/monitor/start','POST')">启动监控</button>
+            <button id="btnStopMonitor" onclick="api('/api/monitor/stop','POST')">停止监控</button>
+          </div>
+          <div class="debug-section">
+            <h3>调试工具</h3>
+            <div class="debug-row">
+              <input id="debugInput" placeholder="输入按钮文本或命令" />
+              <button onclick="debugClick()">点击按钮</button>
+              <button onclick="debugSend()">发送文本</button>
+              <button onclick="debugDump()">查看按钮</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="card rankings">
+          <h2>实时排名 <small id="rankTime"></small></h2>
+          <div id="rankRaw" class="raw-text"></div>
+          <table id="rankTable">
+            <thead><tr>
+              <th>排名</th><th>广告ID</th><th>用户</th><th>价格/天(U)</th><th>标记</th>
+            </tr></thead>
+            <tbody id="rankBody"></tbody>
+          </table>
+        </section>
+
+        <section class="card myads">
+          <h2>我的广告详情 <small id="myAdsTime"></small></h2>
+          <div id="myAdsContainer"></div>
+        </section>
+      </div>
+
+      <!-- 右侧：策略建议 + 配置 + 日志 -->
+      <div class="panel-right">
+        <section class="card suggestions">
+          <h2>竞价建议 <small id="sugTime"></small></h2>
+          <div class="sug-info" id="sugInfo"></div>
+          <div id="sugContainer"></div>
+        </section>
+
+        <section class="card config">
+          <h2>配置</h2>
+          <div class="config-form" id="configForm"></div>
+          <button onclick="saveConfig()">保存配置</button>
+        </section>
+
+        <section class="card logs">
+          <h2>操作日志 <button class="small" onclick="clearLogs()">清空</button></h2>
+          <div id="logContainer"></div>
+        </section>
+      </div>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

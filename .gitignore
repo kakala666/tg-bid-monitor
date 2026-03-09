@@ -1,0 +1,6 @@
+node_modules/
+config.json
+session.txt
+ad_detail_log.jsonl
+抢价格脚本.zip
+.env
