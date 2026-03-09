@@ -37,3 +37,128 @@ export function tokenize(source) {
   }
   return tokens;
 }
+
+export function parse(tokens) {
+  let pos = 0;
+  const peek = () => tokens[pos] || null;
+  const advance = () => tokens[pos++];
+  const expect = (type) => {
+    const t = advance();
+    if (!t || t.type !== type) throw new Error(`期望 ${type}，得到 ${t ? t.type : 'EOF'}`);
+    return t;
+  };
+
+  function parseExpr() { return parseOr(); }
+
+  function parseOr() {
+    let left = parseAnd();
+    while (peek()?.type === 'OP' && peek().value === '||') {
+      advance();
+      left = { type: 'Binary', op: '||', left, right: parseAnd() };
+    }
+    return left;
+  }
+
+  function parseAnd() {
+    let left = parseEquality();
+    while (peek()?.type === 'OP' && peek().value === '&&') {
+      advance();
+      left = { type: 'Binary', op: '&&', left, right: parseEquality() };
+    }
+    return left;
+  }
+
+  function parseEquality() {
+    let left = parseComparison();
+    while (peek()?.type === 'OP' && (peek().value === '==' || peek().value === '!=')) {
+      const op = advance().value;
+      left = { type: 'Binary', op, left, right: parseComparison() };
+    }
+    return left;
+  }
+
+  function parseComparison() {
+    let left = parseAddSub();
+    while (peek()?.type === 'OP' && ['>', '<', '>=', '<='].includes(peek().value)) {
+      const op = advance().value;
+      left = { type: 'Binary', op, left, right: parseAddSub() };
+    }
+    return left;
+  }
+
+  function parseAddSub() {
+    let left = parseMulDiv();
+    while (peek()?.type === 'OP' && (peek().value === '+' || peek().value === '-')) {
+      const op = advance().value;
+      left = { type: 'Binary', op, left, right: parseMulDiv() };
+    }
+    return left;
+  }
+
+  function parseMulDiv() {
+    let left = parseUnary();
+    while (peek()?.type === 'OP' && ['*', '/', '%'].includes(peek().value)) {
+      const op = advance().value;
+      left = { type: 'Binary', op, left, right: parseUnary() };
+    }
+    return left;
+  }
+
+  function parseUnary() {
+    if (peek()?.type === 'OP' && peek().value === '!') {
+      advance();
+      return { type: 'Unary', op: '!', operand: parseUnary() };
+    }
+    return parsePostfix();
+  }
+
+  function parsePostfix() {
+    let node = parsePrimary();
+    while (true) {
+      if (peek()?.type === 'DOT') {
+        advance();
+        const prop = expect('IDENT');
+        node = { type: 'Member', object: node, property: prop.value };
+      } else if (peek()?.type === 'LPAREN') {
+        advance();
+        const args = [];
+        if (peek()?.type !== 'RPAREN') {
+          args.push(parseExpr());
+          while (peek()?.type === 'COMMA') {
+            advance();
+            args.push(parseExpr());
+          }
+        }
+        expect('RPAREN');
+        node = { type: 'Call', callee: node, args };
+      } else {
+        break;
+      }
+    }
+    return node;
+  }
+
+  function parsePrimary() {
+    const t = peek();
+    if (!t) throw new Error('表达式意外结束');
+    if (t.type === 'NUMBER') { advance(); return { type: 'Literal', value: t.value }; }
+    if (t.type === 'STRING') { advance(); return { type: 'Literal', value: t.value }; }
+    if (t.type === 'IDENT' && t.value === 'null') { advance(); return { type: 'Literal', value: null }; }
+    if (t.type === 'IDENT' && t.value === 'true') { advance(); return { type: 'Literal', value: true }; }
+    if (t.type === 'IDENT' && t.value === 'false') { advance(); return { type: 'Literal', value: false }; }
+    if (t.type === 'IDENT') { advance(); return { type: 'Identifier', name: t.value }; }
+    if (t.type === 'LPAREN') {
+      advance();
+      const expr = parseExpr();
+      expect('RPAREN');
+      return expr;
+    }
+    throw new Error(`表达式语法错误: 意外的 token '${t.value}'`);
+  }
+
+  const ast = parseExpr();
+  if (pos < tokens.length) {
+    throw new Error(`表达式语法错误: 多余的 token '${tokens[pos].value}'`);
+  }
+  return ast;
+}
