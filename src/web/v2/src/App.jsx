@@ -10,6 +10,7 @@ import Dashboard from './pages/Dashboard';
 import Analytics from './pages/Analytics';
 import Settings from './pages/Settings';
 import Debug from './pages/Debug';
+import Strategy from './pages/Strategy';
 
 export default function App() {
   useWebSocket();
@@ -26,6 +27,7 @@ export default function App() {
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/analytics" element={<Analytics />} />
+              <Route path="/strategy" element={<Strategy />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/debug" element={<Debug />} />
             </Routes>

@@ -67,10 +67,15 @@ export default function Analytics() {
     });
   }
 
-  const chartProps = {
+  const lineChartProps = {
     height: 280,
     xAxis: [{ data: xLabels, scaleType: 'point' }],
-    slotProps: { legend: { labelStyle: { fontSize: 12 } } },
+    sx: { '& .MuiChartsAxis-tickLabel': { fontSize: '0.7rem' } },
+  };
+
+  const barChartProps = {
+    height: 280,
+    xAxis: [{ data: xLabels, scaleType: 'band' }],
     sx: { '& .MuiChartsAxis-tickLabel': { fontSize: '0.7rem' } },
   };
 
@@ -126,7 +131,7 @@ export default function Analytics() {
               </Typography>
               <LineChart
                 series={buildSeries('currentBid')}
-                {...chartProps}
+                {...lineChartProps}
               />
             </CardContent>
           </Card>
@@ -140,7 +145,7 @@ export default function Analytics() {
               <LineChart
                 series={buildSeries('rank')}
                 yAxis={[{ reverse: true }]}
-                {...chartProps}
+                {...lineChartProps}
               />
             </CardContent>
           </Card>
@@ -153,7 +158,7 @@ export default function Analytics() {
               </Typography>
               <BarChart
                 series={buildSeries('viewsIncr')}
-                {...chartProps}
+                {...barChartProps}
               />
             </CardContent>
           </Card>
@@ -166,7 +171,7 @@ export default function Analytics() {
               </Typography>
               <LineChart
                 series={buildSeries('remaining').map(s => ({ ...s, area: true }))}
-                {...chartProps}
+                {...lineChartProps}
               />
             </CardContent>
           </Card>

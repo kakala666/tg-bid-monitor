@@ -10,12 +10,14 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import SettingsIcon from '@mui/icons-material/Settings';
 import BugReportIcon from '@mui/icons-material/BugReport';
+import AccountTreeIcon from '@mui/icons-material/AccountTree';
 
 const NAV_WIDTH = 72;
 
 const navItems = [
   { path: '/', label: '仪表盘', icon: <DashboardIcon /> },
   { path: '/analytics', label: '统计趋势', icon: <BarChartIcon /> },
+  { path: '/strategy', label: '策略编辑', icon: <AccountTreeIcon /> },
   { path: '/settings', label: '配置管理', icon: <SettingsIcon /> },
   { path: '/debug', label: '调试工具', icon: <BugReportIcon /> },
 ];
