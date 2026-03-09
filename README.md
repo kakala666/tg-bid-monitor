@@ -26,14 +26,8 @@
 git clone https://github.com/kakala666/tg-bid-monitor.git
 cd tg-bid-monitor
 
-# 安装后端依赖
-npm install
-
-# 安装并构建前端
-cd src/web/v2
-npm install
-npm run build
-cd ../../..
+# 一键安装（后端 + 前端构建）
+npm run setup
 ```
 
 ### 3. 配置
@@ -110,8 +104,7 @@ npm start
 前端开发时可使用 Vite 热更新：
 
 ```bash
-cd src/web/v2
-npm run dev
+npm run dev:v2
 ```
 
 Vite 开发服务器运行在 `http://localhost:5173/v2/`，API 和 WebSocket 自动代理到后端 3000 端口。
