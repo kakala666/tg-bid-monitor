@@ -194,6 +194,11 @@ export function startWebServer(port) {
     res.sendFile(path.join(v2Path, 'index.html'));
   });
 
+  // 根路径重定向到 V2
+  app.get('/', (req, res) => {
+    res.redirect('/v2/');
+  });
+
   // API: 获取配置
   app.get('/api/config', (req, res) => {
     res.json(loadConfig());

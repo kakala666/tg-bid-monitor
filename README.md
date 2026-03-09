@@ -23,10 +23,8 @@
 ### 2. 安装
 
 ```bash
-git clone https://github.com/kakala666/tg-bid-monitor.git
+git clone https://github.com/kakala666/tg-bid-monitor.git -b V2
 cd tg-bid-monitor
-
-# 安装后端依赖
 npm install
 ```
 
@@ -77,11 +75,11 @@ cp config.example.json config.json
 npm start
 ```
 
-`npm start` 会自动构建 V2 前端再启动后端服务。首次启动会提示输入 Telegram 验证码（发送到你的 Telegram），登录成功后 session 会保存到 `session.txt`，之后启动无需再次验证。
+`npm start` 会自动构建 V2 前端再启动后端服务（首次构建需要约 10 秒）。首次启动会提示输入 Telegram 验证码（发送到你的 Telegram），登录成功后 session 会保存到 `session.txt`，之后启动无需再次验证。
 
 ### 5. 使用
 
-浏览器打开 `http://localhost:3000/v2/`
+浏览器打开 `http://localhost:3000`（自动跳转到 V2）
 
 1. 点击 **首次导航** — 让程序导航到 Bot 的广告排名页
 2. 点击 **手动刷新** — 获取当前排名数据
