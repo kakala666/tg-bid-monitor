@@ -185,19 +185,22 @@ async function runMonitorLoop() {
 export function startWebServer(port) {
   const app = express();
   app.use(express.json());
-  app.use(express.static(path.join(__dirname, 'public')));
 
-  // V2 前端
-  const v2Path = path.join(__dirname, 'public-v2');
-  app.use('/v2', express.static(v2Path));
-  app.get('/v2/*', (req, res) => {
-    res.sendFile(path.join(v2Path, 'index.html'));
-  });
-
-  // 根路径重定向到 V2
+  // 根路径重定向到 V2（必须在 V1 static 之前）
   app.get('/', (req, res) => {
     res.redirect('/v2/');
   });
+
+  // V2 前端
+  const v2Path = path.join(__dirname, 'public-v2');
+  app.use('/v2', express.static(v2Path, { index: 'index.html' }));
+  // SPA fallback：所有 /v2 下非文件请求都返回 index.html
+  app.use('/v2', (req, res) => {
+    res.sendFile(path.join(v2Path, 'index.html'));
+  });
+
+  // V1 前端（保留兼容）
+  app.use(express.static(path.join(__dirname, 'public')));
 
   // API: 获取配置
   app.get('/api/config', (req, res) => {
