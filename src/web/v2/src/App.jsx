@@ -8,6 +8,7 @@ import NavigationRail, { NAV_WIDTH } from './components/NavigationRail';
 import useWebSocket from './hooks/useWebSocket';
 import useStore from './stores/useStore';
 import Dashboard from './pages/Dashboard';
+import Analytics from './pages/Analytics';
 
 function Placeholder({ title }) {
   return <Typography variant="h5" sx={{ p: 3 }}>{title}</Typography>;
@@ -27,7 +28,7 @@ export default function App() {
           <Box component="main" sx={{ flexGrow: 1, overflow: 'auto', ml: `${NAV_WIDTH}px` }}>
             <Routes>
               <Route path="/" element={<Dashboard />} />
-              <Route path="/analytics" element={<Placeholder title="统计趋势" />} />
+              <Route path="/analytics" element={<Analytics />} />
               <Route path="/settings" element={<Placeholder title="配置管理" />} />
               <Route path="/debug" element={<Placeholder title="调试工具" />} />
             </Routes>
