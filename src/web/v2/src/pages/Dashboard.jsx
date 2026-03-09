@@ -1,7 +1,8 @@
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import ControlPanel from '../components/ControlPanel';
 import RankingTable from '../components/RankingTable';
+import SuggestionPanel from '../components/SuggestionCard';
+import LogPanel from '../components/LogPanel';
 
 export default function Dashboard() {
   return (
@@ -18,12 +19,8 @@ export default function Dashboard() {
 
       {/* 右栏: 建议 + 日志 */}
       <Box sx={{ width: 360, flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-        <Typography variant="subtitle2" color="text.secondary" sx={{ p: 2 }}>
-          竞价建议 (待实现)
-        </Typography>
-        <Typography variant="subtitle2" color="text.secondary" sx={{ p: 2 }}>
-          日志 (待实现)
-        </Typography>
+        <SuggestionPanel />
+        <LogPanel />
       </Box>
     </Box>
   );
