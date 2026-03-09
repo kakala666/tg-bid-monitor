@@ -7,7 +7,7 @@ import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { addLogListener, removeLogListener, info } from '../logger.js';
 import * as tg from '../telegram.js';
-import { calcAllBids, getCurrentBudgetLimit } from '../strategy.js';
+import { calcAllBids } from '../strategy-v2/index.js';
 import { calcStats } from '../stats.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));

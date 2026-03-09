@@ -1,3 +1,4 @@
+// @deprecated 已被 strategy-v2/ 替代，保留供参考
 // 竞价策略计算模块 - 只计算不执行
 import * as logger from './logger.js';
 
