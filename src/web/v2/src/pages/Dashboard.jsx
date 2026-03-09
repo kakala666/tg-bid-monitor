@@ -1,7 +1,6 @@
 import Box from '@mui/material/Box';
 import ControlPanel from '../components/ControlPanel';
 import RankingTable from '../components/RankingTable';
-import SuggestionPanel from '../components/SuggestionCard';
 import LogPanel from '../components/LogPanel';
 
 export default function Dashboard() {
@@ -17,9 +16,8 @@ export default function Dashboard() {
         <RankingTable />
       </Box>
 
-      {/* 右栏: 建议 + 日志 */}
+      {/* 右栏: 日志 */}
       <Box sx={{ width: 360, flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-        <SuggestionPanel />
         <LogPanel />
       </Box>
     </Box>

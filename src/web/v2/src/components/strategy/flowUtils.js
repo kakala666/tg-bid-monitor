@@ -19,9 +19,9 @@ export function engineToFlow(engineGraph) {
     target: e.to,
     sourceHandle: e.branch || 'default',
     label: e.branch === 'yes' ? '是' : e.branch === 'no' ? '否' : '',
-    style: { stroke: e.branch === 'yes' ? '#2ECC71' : e.branch === 'no' ? '#E74C3C' : '#888' },
-    labelStyle: { fill: '#ccc', fontSize: 11 },
-    labelBgStyle: { fill: '#1A1A2E', fillOpacity: 0.8 },
+    style: { stroke: e.branch === 'yes' ? '#2ECC71' : e.branch === 'no' ? '#E74C3C' : '#999' },
+    labelStyle: { fill: '#555', fontSize: 11 },
+    labelBgStyle: { fill: '#fff', fillOpacity: 0.85 },
   }));
 
   return autoLayout({ nodes, edges });

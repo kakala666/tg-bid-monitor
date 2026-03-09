@@ -75,12 +75,22 @@ const useStore = create((set, get) => ({
   async apiCall(url, method = 'POST') {
     try {
       const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' } });
-      const data = await res.json();
+      const text = await res.text();
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        throw new Error(`服务端返回非 JSON (${res.status}): ${text.slice(0, 200)}`);
+      }
+      if (!res.ok) {
+        throw new Error(data.error || `请求失败 (${res.status})`);
+      }
       if (data.rankings) get().setRankings(data);
       if (data.strategy) get().setSuggestions(data.strategy);
+      if (typeof data.monitoring === 'boolean') set({ monitoring: data.monitoring });
       return data;
     } catch (e) {
-      get().addLog({ level: 'ERROR', message: `API错误: ${e.message}`, time: new Date().toISOString() });
+      get().addLog({ level: 'ERROR', message: `API错误 [${url}]: ${e.message}`, time: new Date().toISOString() });
     }
   },
 

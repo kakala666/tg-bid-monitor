@@ -12,7 +12,7 @@ export default function TemplateNode({ data, selected }) {
       borderStyle: 'double',
       borderWidth: 3,
       borderColor: 'info.main',
-      bgcolor: selected ? 'info.dark' : 'rgba(41, 182, 246, 0.08)',
+      bgcolor: selected ? 'rgba(41, 182, 246, 0.25)' : 'rgba(41, 182, 246, 0.1)',
       minWidth: 130,
       display: 'flex',
       alignItems: 'center',

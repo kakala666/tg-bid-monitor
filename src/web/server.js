@@ -213,12 +213,20 @@ export function startWebServer(port) {
 
   // API: 启动/停止监控
   app.post('/api/monitor/start', (req, res) => {
-    startMonitor();
-    res.json({ ok: true, monitoring: true });
+    try {
+      startMonitor();
+      res.json({ ok: true, monitoring: true });
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
   });
   app.post('/api/monitor/stop', (req, res) => {
-    stopMonitor();
-    res.json({ ok: true, monitoring: false });
+    try {
+      stopMonitor();
+      res.json({ ok: true, monitoring: false });
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
   });
   app.get('/api/monitor/status', (req, res) => {
     res.json({ monitoring: monitorRunning });
@@ -365,7 +373,19 @@ export function startWebServer(port) {
   });
 
   const server = http.createServer(app);
-  wss = new WebSocketServer({ server });
+  wss = new WebSocketServer({ noServer: true });
+
+  // 仅在 /ws 路径上处理 WebSocket 升级
+  server.on('upgrade', (request, socket, head) => {
+    const { pathname } = new URL(request.url, `http://${request.headers.host}`);
+    if (pathname === '/ws') {
+      wss.handleUpgrade(request, socket, head, (ws) => {
+        wss.emit('connection', ws, request);
+      });
+    } else {
+      socket.destroy();
+    }
+  });
 
   // WebSocket连接：推送日志
   wss.on('connection', (ws) => {

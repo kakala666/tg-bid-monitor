@@ -12,17 +12,29 @@ export default function useWebSocket() {
 
   useEffect(() => {
     let reconnectTimer = null;
+    let disposed = false;
 
     function connect() {
+      if (disposed) return;
       const proto = location.protocol === 'https:' ? 'wss' : 'ws';
-      const ws = new WebSocket(`${proto}://${location.host}`);
+      // 使用 /ws 路径，避免与 Vite HMR WebSocket 冲突
+      const ws = new WebSocket(`${proto}://${location.host}/ws`);
       wsRef.current = ws;
 
-      ws.onopen = () => setConnected(true);
+      ws.onopen = () => {
+        setConnected(true);
+        addLog({ level: 'INFO', message: 'WebSocket 已连接', time: new Date().toISOString() });
+      };
 
       ws.onclose = () => {
         setConnected(false);
-        reconnectTimer = setTimeout(connect, 3000);
+        if (!disposed) {
+          reconnectTimer = setTimeout(connect, 3000);
+        }
+      };
+
+      ws.onerror = () => {
+        // onerror 后会自动触发 onclose，无需额外处理
       };
 
       ws.onmessage = (evt) => {
@@ -51,6 +63,7 @@ export default function useWebSocket() {
     connect();
 
     return () => {
+      disposed = true;
       if (reconnectTimer) clearTimeout(reconnectTimer);
       if (wsRef.current) wsRef.current.close();
     };

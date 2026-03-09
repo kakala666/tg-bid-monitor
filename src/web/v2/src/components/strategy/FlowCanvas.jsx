@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useRef, forwardRef, useImperativeHandle } from 'react';
 import {
   ReactFlow,
   Background,
@@ -43,32 +43,31 @@ const defaultEdgeOptions = {
   style: { strokeWidth: 2 },
 };
 
-export default function FlowCanvas({ nodes: initNodes, edges: initEdges, onNodesChange: onExtNodesChange, onEdgesChange: onExtEdgesChange, onNodeSelect }) {
+const FlowCanvas = forwardRef(function FlowCanvas({ nodes: initNodes, edges: initEdges, onNodeSelect }, ref) {
   const [nodes, setNodes, onNodesChange] = useNodesState(initNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initEdges);
   const [contextMenu, setContextMenu] = useState(null);
-  const reactFlowWrapper = useRef(null);
   const reactFlowInstance = useRef(null);
 
-  // 同步到外部
-  const handleNodesChange = useCallback((changes) => {
-    onNodesChange(changes);
-    onExtNodesChange?.(changes);
-  }, [onNodesChange, onExtNodesChange]);
-
-  const handleEdgesChange = useCallback((changes) => {
-    onEdgesChange(changes);
-    onExtEdgesChange?.(changes);
-  }, [onEdgesChange, onExtEdgesChange]);
+  // 暴露给父组件：获取当前数据、更新节点数据
+  useImperativeHandle(ref, () => ({
+    getNodes: () => nodes,
+    getEdges: () => edges,
+    updateNodeData: (nodeId, newData) => {
+      setNodes((nds) =>
+        nds.map((n) => n.id === nodeId ? { ...n, data: newData } : n)
+      );
+    },
+  }), [nodes, edges, setNodes]);
 
   const onConnect = useCallback((params) => {
     const edge = {
       ...params,
       id: `e-${params.source}-${params.target}-${Date.now()}`,
       label: params.sourceHandle === 'yes' ? '是' : params.sourceHandle === 'no' ? '否' : '',
-      style: { stroke: params.sourceHandle === 'yes' ? '#2ECC71' : params.sourceHandle === 'no' ? '#E74C3C' : '#888', strokeWidth: 2 },
-      labelStyle: { fill: '#ccc', fontSize: 11 },
-      labelBgStyle: { fill: '#1A1A2E', fillOpacity: 0.8 },
+      style: { stroke: params.sourceHandle === 'yes' ? '#2ECC71' : params.sourceHandle === 'no' ? '#E74C3C' : '#999', strokeWidth: 2 },
+      labelStyle: { fill: '#555', fontSize: 11 },
+      labelBgStyle: { fill: '#fff', fillOpacity: 0.85 },
       markerEnd: { type: MarkerType.ArrowClosed, width: 16, height: 16 },
     };
     setEdges((eds) => addEdge(edge, eds));
@@ -82,15 +81,13 @@ export default function FlowCanvas({ nodes: initNodes, edges: initEdges, onNodes
     onNodeSelect?.(null);
   }, [onNodeSelect]);
 
-  // 右键菜单
   const onPaneContextMenu = useCallback((event) => {
     event.preventDefault();
-    const bounds = reactFlowWrapper.current.getBoundingClientRect();
-    const position = reactFlowInstance.current.screenToFlowPosition({
-      x: event.clientX - bounds.left,
-      y: event.clientY - bounds.top,
+    const position = reactFlowInstance.current?.screenToFlowPosition({
+      x: event.clientX,
+      y: event.clientY,
     });
-    setContextMenu({ mouseX: event.clientX, mouseY: event.clientY, flowPos: position });
+    setContextMenu({ mouseX: event.clientX, mouseY: event.clientY, flowPos: position || { x: 250, y: 250 } });
   }, []);
 
   const handleCloseMenu = () => setContextMenu(null);
@@ -113,7 +110,11 @@ export default function FlowCanvas({ nodes: initNodes, edges: initEdges, onNodes
   }, [nodes, edges, setNodes]);
 
   return (
-    <Box ref={reactFlowWrapper} sx={{ flex: 1, position: 'relative' }}>
+    <Box sx={{
+      flex: 1,
+      position: 'relative',
+      '& .react-flow__attribution': { display: 'none' },
+    }}>
       {/* 工具栏 */}
       <Box sx={{
         position: 'absolute', top: 8, right: 8, zIndex: 10,
@@ -131,8 +132,8 @@ export default function FlowCanvas({ nodes: initNodes, edges: initEdges, onNodes
       <ReactFlow
         nodes={nodes}
         edges={edges}
-        onNodesChange={handleNodesChange}
-        onEdgesChange={handleEdgesChange}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         onNodeClick={onNodeClick}
         onPaneClick={onPaneClick}
@@ -142,9 +143,9 @@ export default function FlowCanvas({ nodes: initNodes, edges: initEdges, onNodes
         defaultEdgeOptions={defaultEdgeOptions}
         fitView
         deleteKeyCode="Delete"
-        colorMode="dark"
+        colorMode="light"
       >
-        <Background gap={20} size={1} color="#ffffff10" />
+        <Background gap={20} size={1} color="rgba(0, 0, 0, 0.06)" />
         <Controls position="bottom-left" />
       </ReactFlow>
 
@@ -179,4 +180,6 @@ export default function FlowCanvas({ nodes: initNodes, edges: initEdges, onNodes
       </Menu>
     </Box>
   );
-}
+});
+
+export default FlowCanvas;

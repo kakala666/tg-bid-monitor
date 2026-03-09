@@ -9,23 +9,37 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import AdConfigForm from '../components/AdConfigForm';
 import useStore from '../stores/useStore';
+import { getAiConfig, saveAiConfig } from '../utils/aiConfig';
 
 export default function Settings() {
   const storeConfig = useStore((s) => s.config);
   const saveConfigApi = useStore((s) => s.saveConfig);
   const [config, setConfig] = useState({});
   const [snack, setSnack] = useState({ open: false, message: '', severity: 'success' });
+  const [aiCfg, setAiCfg] = useState(getAiConfig);
+  const [showKey, setShowKey] = useState(false);
 
   useEffect(() => {
     setConfig(JSON.parse(JSON.stringify(storeConfig)));
   }, [storeConfig]);
+
+  const updateAi = (field, value) => {
+    setAiCfg((prev) => {
+      const next = { ...prev, [field]: value };
+      saveAiConfig(next);
+      return next;
+    });
+  };
 
   const update = (field, value) => {
     setConfig((prev) => ({ ...prev, [field]: value }));
@@ -165,6 +179,53 @@ export default function Settings() {
               onDelete={deleteAdConfig}
             />
           ))}
+        </CardContent>
+      </Card>
+
+      {/* AI 配置 */}
+      <Card sx={{ mt: 2 }}>
+        <CardContent>
+          <Typography variant="subtitle2" color="primary" gutterBottom>
+            AI 配置
+          </Typography>
+          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 2 }}>
+            用于策略编辑器的 AI 总结功能，需要 OpenAI 兼容的 API
+          </Typography>
+          <Stack spacing={2}>
+            <TextField
+              label="API 端点"
+              value={aiCfg.endpoint}
+              size="small"
+              onChange={(e) => updateAi('endpoint', e.target.value)}
+              placeholder="https://open.bigmodel.cn/api/paas/v4"
+              helperText="OpenAI 兼容的 API 地址"
+            />
+            <TextField
+              label="API Key"
+              value={aiCfg.apiKey}
+              size="small"
+              type={showKey ? 'text' : 'password'}
+              onChange={(e) => updateAi('apiKey', e.target.value)}
+              placeholder="输入你的 API Key"
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton size="small" onClick={() => setShowKey(!showKey)}>
+                      {showKey ? <VisibilityOffIcon fontSize="small" /> : <VisibilityIcon fontSize="small" />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <TextField
+              label="模型ID"
+              value={aiCfg.model}
+              size="small"
+              onChange={(e) => updateAi('model', e.target.value)}
+              placeholder="glm-4-flash"
+              helperText="例: glm-4-flash, gpt-4o-mini, deepseek-chat"
+            />
+          </Stack>
         </CardContent>
       </Card>
 
