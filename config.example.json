@@ -1,0 +1,22 @@
+{
+  "botUsername": "你的Bot用户名",
+  "checkInterval": 10,
+  "checkIntervalSlots": [],
+  "autoBidEnabled": false,
+  "enableNotify": false,
+  "notifyGroupId": "",
+  "adConfigs": {
+    "AD0001": {
+      "note": "广告备注",
+      "priceGapThreshold": 5,
+      "rankLimit": 5,
+      "timeSlots": [
+        {
+          "start": "00:00",
+          "end": "24:00",
+          "budgetLimit": 200
+        }
+      ]
+    }
+  }
+}
