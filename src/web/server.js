@@ -187,6 +187,13 @@ export function startWebServer(port) {
   app.use(express.json());
   app.use(express.static(path.join(__dirname, 'public')));
 
+  // V2 前端
+  const v2Path = path.join(__dirname, 'public-v2');
+  app.use('/v2', express.static(v2Path));
+  app.get('/v2/*', (req, res) => {
+    res.sendFile(path.join(v2Path, 'index.html'));
+  });
+
   // API: 获取配置
   app.get('/api/config', (req, res) => {
     res.json(loadConfig());
